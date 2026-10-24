@@ -177,6 +177,20 @@ Snippet shapes removed (IDs and whitespace normalised):
   <script async src="https://www.googletagmanager.com/gtag/js?id=<ID>"> </script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '<ID>'); gtag('config','<ID>'); </script>
   ```
 
+## Hosting
+
+Served from **Cloudflare Workers static assets** (Phase B of the olddroplet migration). `wrangler.jsonc`, `worker.js`, `.gitignore`, `site/404.html` and this section are written by `hosting.py` (`python3 -I hosting.py 2022.winnipegelection.ca <preview|routed|final>`).
+
+* **Worker:** `static-2022-winnipegelection-ca`, account `Stungeye@gmail.com's Account`.
+* **Deploy:** `npx wrangler@4.148.0 deploy` from the repo root. Only `site/` is uploaded.
+* **Routes:** none yet (preview only).
+* **workers.dev:** https://static-2022-winnipegelection-ca.stungeye.workers.dev. Per-version preview URLs are off (`preview_urls: false`).
+* **Serving:** `html_handling: auto-trailing-slash` (`/foo` serves `foo.html`, `/foo/` serves `foo/index.html`; the other forms 307 to those) and `not_found_handling: 404-page` (`site/404.html`, a minimal page added in Phase B).
+* **Worker script** (`worker.js`, runs only for `/candidates/*` and `/parties/*`): `?page=N` / `?pagenum=N` 301 to `…/page/N/` (`N` ≤ 1 → the bare path; other query parameters are dropped; a page past the end → the bare path), and `/candidates/<slug>/<N>/` 301s to `…/page/N/`. Everything else falls through to the assets.
+* **http → https:** the zone setting "Always Use HTTPS" (301 at Cloudflare's edge).
+* **Redirect rules:** none.
+* **Rollback:** while the old origin is up, remove `routes` from `wrangler.jsonc` and deploy (or delete the route in the dashboard); the origin serves again at once. A bad version can be rolled back with `npx wrangler@4.148.0 rollback`.
+
 ## Secret scan
 
 The Phase A §7.2 scan was run over `site/` and found nothing. It checks for:
