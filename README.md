@@ -118,6 +118,43 @@ Only the external Font Awesome stylesheet keeps a `?ver=`. The transform only re
 
 **For the hosting phase:** 301 `?pagenum=N` (alone or alongside other parameters) to `…/page/N/` (`N=1` → the bare path), and rewrite the old-host links listed above. Query strings on assets need no rule.
 
+## Old-host links rewritten
+
+In Phase B of the olddroplet migration (R3, 2026-10-24), `python3 -I rewrite_links.py 2022.winnipegelection.ca --apply` rewrote 42 links in 6 files from `https://www.winnipegelection.ca/…` to `https://2022.winnipegelection.ca/…`. Only links whose target is in `site/` were changed:
+
+* `/about-winnipegelection-ca/#odm` (6)
+* `/constituencies/councillor-candidates/` (1)
+* `/constituencies/louis-riel-1/` (1)
+* `/constituencies/louis-riel-2/` (1)
+* `/constituencies/louis-riel-3/` (1)
+* `/constituencies/louis-riel-4/` (1)
+* `/constituencies/mayoral-candidates/` (1)
+* `/constituencies/pembina-trails-1/` (1)
+* `/constituencies/pembina-trails-2/` (1)
+* `/constituencies/pembina-trails-3/` (1)
+* `/constituencies/river-east-transcona-1/` (1)
+* `/constituencies/river-east-transcona-2/` (1)
+* `/constituencies/river-east-transcona-3/` (1)
+* `/constituencies/river-east-transcona-4/` (1)
+* `/constituencies/seine-river-1/` (1)
+* `/constituencies/seven-oaks-2/` (1)
+* `/constituencies/seven-oaks-3/` (1)
+* `/constituencies/st-james-assiniboia-centre-ward/` (1)
+* `/constituencies/st-james-assiniboia-east-ward/` (1)
+* `/constituencies/st-james-assiniboia-west-ward/` (1)
+* `/constituencies/trustee-candidates/` (1)
+* `/constituencies/winnipeg-1/` (1)
+* `/constituencies/winnipeg-2/` (1)
+* `/constituencies/winnipeg-3/` (1)
+* `/constituencies/winnipeg-4/` (1)
+* `/constituencies/winnipeg-5/` (1)
+* `/constituencies/winnipeg-6/` (1)
+* `/constituencies/winnipeg-7/` (1)
+* `/constituencies/winnipeg-8/` (1)
+* `/constituencies/winnipeg-9/` (1)
+* `/frequently-asked-questions/` (6)
+* `/learn-about-elections/#what_mayor` (1)
+
 ## Secret scan
 
 The Phase A §7.2 scan was run over `site/` and found nothing. It checks for:
