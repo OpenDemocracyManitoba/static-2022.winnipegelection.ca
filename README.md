@@ -2,7 +2,8 @@
 
 Static HTML copy of **2022.winnipegelection.ca**, Open Democracy Manitoba's guide to the 2022 Winnipeg municipal and school board elections. It ran on WordPress 5.9.19, with the ElectionData-V2 theme supplied by the Inform-Your-Vote-Wordpress-Plugin. It was crawled from olddroplet (`odm-nginx-ruby-php-2018`, 159.203.24.194) on 2026-10-24, before the server was retired.
 
-* `site/` holds the crawl: 1,650 files in the raw crawl commit.
+* `site/` holds the crawl: 1,609 files, after the transform commit described below.
+* `transform.py` is the script that made the second commit.
 * `crawl.log.gz` holds the wget log.
 
 The WordPress source, the DB dump (`2022_winnipegelection_ca`) and the nginx vhost are in the private repo `OpenDemocracyManitoba/archive-2022.winnipegelection.ca`.
@@ -93,7 +94,29 @@ There were no references to `upcoming.manitobaelection.ca` or `159.203.24.194`.
 
 ## Commits and URL mapping
 
+The repo has two commits:
+
 1. **Raw crawl.** `--restrict-file-names=windows` saved each URL's `?` as `@`.
+2. **Path-based URLs** (owner decision, 2026-10-24), made by `python3 -I transform.py 2022.winnipegelection.ca --apply`:
+
+|Old URL (live site)|Crawl file (commit 1)|Now|
+|-|-|-|
+|`/candidates/<slug>/?pagenum=N#news`|`candidates/<slug>/index.html@pagenum=N.html`|`candidates/<slug>/page/N/index.html` (421 files; 41 candidates)|
+|`/candidates/<slug>/?pagenum=1#news`|`candidates/<slug>/index.html@pagenum=1.html` (41 files)|dropped: identical to `candidates/<slug>/index.html`, apart from cache comments|
+|`<file>?ver=X`|`<file>@ver=X`, `<file>@ver=X.css`|`<file>` (11 files; no plain copy existed)|
+
+No URL combines `pagenum` with another query parameter, so every pager link mapped cleanly. The `&pagenum=N` URLs in the server's access log weren't linked from any crawled page.
+
+The transform also rewrote the links in the HTML:
+* 4,888 pager links: `?pagenum=N` → `page/N/`, keeping `#news`, and `?pagenum=1` → the bare candidate path.
+* 6,498 cache-buster query strings stripped, including the JSON-escaped emoji-loader URL.
+* 595 `<link rel='shortlink'>` tags removed.
+
+Only the external Font Awesome stylesheet keeps a `?ver=`. The transform only rewrites a link when its new target is in `site/`, and it never overwrites a file.
+
+**No `@` files are left.** An internal-link check finds **0 unresolved out of 39,386**. It covers every `https://2022.winnipegelection.ca/…`, root-relative or `url()` reference, ignores the blocked `/wp-json` and `xmlrpc.php` links, and counts `/foo` → `foo.html` as resolved. It doesn't follow the `https://www.winnipegelection.ca/…` links listed above.
+
+**For the hosting phase:** 301 `?pagenum=N` (alone or alongside other parameters) to `…/page/N/` (`N=1` → the bare path), and rewrite the old-host links listed above. Query strings on assets need no rule.
 
 ## Secret scan
 
