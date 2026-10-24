@@ -165,6 +165,18 @@ In Phase B of the olddroplet migration (R4, 2026-10-24), the stylesheets every p
 
 Font Awesome Free is under the Font Awesome Free License (fonts SIL OFL 1.1, CSS MIT); Libre Franklin is under the SIL OFL 1.1. Other third-party scripts and embeds were left as they were.
 
+## Analytics removed
+
+Google Tag Manager / Google Analytics (and the Google Ads tag that rides on `gtag.js`) were removed in Phase B of the olddroplet migration (owner decision D7, 2026-10-24) by `python3 -I strip_analytics.py 2022.winnipegelection.ca --apply`. Files changed: 641 HTML files. IDs: `AW-798203154`, `UA-17537013-1`. Each loader went together with its inline block and the comment around it. Other third-party scripts (fonts, embeds, Jetpack stats) were left as they were.
+
+Snippet shapes removed (IDs and whitespace normalised):
+
+* 641 ×
+
+  ```html
+  <script async src="https://www.googletagmanager.com/gtag/js?id=<ID>"> </script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '<ID>'); gtag('config','<ID>'); </script>
+  ```
+
 ## Secret scan
 
 The Phase A §7.2 scan was run over `site/` and found nothing. It checks for:
